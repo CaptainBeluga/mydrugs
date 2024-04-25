@@ -45,7 +45,7 @@ def token_gen(userid,username):
     token = jwt.encode({
     "user" : username,
     "userid" : userid,
-    "exp" : datetime.utcnow() + timedelta(seconds=15)
+    "exp" : datetime.utcnow() + timedelta(minutes=50)
     },
     ENV["JWT_KEY"],algorithm='HS256')
 
