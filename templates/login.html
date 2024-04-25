@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MyDrugs | Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./static/css/style.css">
+    <link rel="icon" href="./static/img/logos/logo_white.png">
+</head>
+
+<body data-bs-theme="dark">
+    <nav class="navbar navbar-expand-sm bg-body-tertiary p-2">
+        <div class="container-fluid">
+            <a class="navbar-brand">
+                <img src="./static/img/logos/logo_white.png" class="img-fluid" width="95" height="40">
+            </a>
+            <a class="navbar-brand fs-3 special_font" href="/">MyDrugs</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link disabled">Login</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Register</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4 text-center">
+        <h1 class="mb-4 text-center special_font">MYDRUGS LOGIN</h1>
+        <hr>
+
+        <div class="border border-3 border-primary mt-5 shadow-lg p-4 mb-5 bg-body-tertiary rounded">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="./static/img/logos/logo_white.png" class="img-fluid pt-4 pb-4 authentication">
+                </div>
+                <div class="col-md-4 d-none d-md-block">
+                    <img src="./static/img/logos/logo_white.png" class="img-fluid pt-4 pb-4 authentication">
+                </div>
+                <div class="col-md-4 d-none d-md-block">
+                    <img src="./static/img/logos/logo_white.png" class="img-fluid pt-4 pb-4 authentication">
+                </div>
+            </div>
+
+            <hr>
+
+            <form action="/login" method="post">
+                <div class="row mt-5">
+                    <div class="col-md-10 mx-auto">
+                        <div class="form-floating mb-3">
+                            <input type="text" name="username" class="form-control" id="floatingInput" minlength="6" maxlength="12" placeholder="" required>
+                            <label>USERNAME</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="password" name="password" class="form-control" id="floatingInput" minlength="8" maxlength="30" placeholder="" required>
+                            <label>PASSWORD</label>
+                        </div>
+                        
+                        <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" />
+
+                        <a href="/register" class="link-underline-primary">Haven't a <span class="fw-bold text-primary">MyDrugs Account</span> yet?</a>
+                        
+                        <div class="d-grid gap-2 mb-3 mt-3">
+                            <button class="btn btn-primary" type="submit">LOGIN</button>
+                        </div>
+
+                        {% if msg[0] %}
+                        <div class="alert alert-danger mt-4" role="alert">{{msg[1]}}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Sriracha&display=swap');
+
+:root{
+    --title: "Silkscreen", sans-serif;
+    --description: "Sriracha", cursive;
+}
+
+button, a[type="button"]{
+    font-family: var(--title) !important;
+}
+
+/* keep the same height for card (shop.html) */
+.flex{
+    display: flex;
+}
+
+nav a{
+    font-family: var(--title);
+}
+
+form{
+    font-family: var(--title);
+}
+
+form label,select,input, a{
+    font-family: var(--description);
+}
+
+.special_font {
+    font-family: var(--title);
+}
+  
+.description{
+    font-family: var(--description);
+}
+
+.authentication{
+    max-width: 150px;
+}
+
+.products_opacity{
+    opacity: 0.3;
+    transition: 0.3s;
+}
+.products_opacity:hover{
+    opacity: 1;
+
+    .card-body button{
+        background: rgb(0,25,255);
+        background: linear-gradient(319deg, rgba(0,25,255,1) 0%, rgba(3,160,162,1) 100%);
+        color: white;
+    }
+}
+
+.premium_products{
+    background: rgb(255,176,0);
+    background: linear-gradient(319deg, rgba(255,176,0,1) 26%, rgba(250,255,55,1) 100%);
+    color: black;
+}
+
+.limited_edition_products{
+    background: rgb(185,0,255);
+    background: linear-gradient(319deg, rgba(185,0,255,1) 15%, rgba(255,0,0,1) 100%);
+}
+
+.new_addition_products{
+    background: rgb(31,115,152);
+    background: linear-gradient(90deg, rgba(31,115,152,1) 0%, rgba(25,227,14,1) 66%);
+}
+
+
+.products_actions button{
+    border-radius: 25px;
+}
+.cart_products img{
+    max-width: 200px;
+}
+
+.text_over_image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+  }
+  
+.payment_pic{
+    max-width: 250px;
+    border-radius: 15px;
+}
+
+.price img{
+    max-width: 30px;
+}
+
+.rating{
+    max-width: 20px;
+}
+
+@media screen and (min-width: 768px){
+    .flavours img{
+        opacity: 0.2;
+        transition: 1s;
+    }
+    .flavours img:hover{
+        opacity: 1;
+        transition: 0.5s;
+    }
+    
+}
+
+@media screen and (max-width: 767px){
+    .flavours img{
+        animation-name: changeOpacity;
+        animation-duration: 2.5s;
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes changeOpacity {
+        from{opacity: 0;}
+        to{opacity: 1;}
+    }
+}
