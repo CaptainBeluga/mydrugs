@@ -249,7 +249,7 @@ def register():
 
                                     s = conn.execute("SELECT * FROM users WHERE username=?",(username,)).fetchall()
                                     if len(s) == 0:
-                                        conn.execute("INSERT INTO `users` (`id`,`username`, `password`, `email`, `age`, `gender`) VALUES (NULL, ?, ?, ?, ?, ?)",(username, form["password"], bleach.clean(form["email"]), 18, 0,))
+                                        conn.execute("INSERT INTO `users` (`id`,`username`, `password`, `email`, `age`, `gender`) VALUES (NULL, ?, ?, ?, ?, ?)",(username, hash_password(form["password"]), bleach.clean(form["email"]), 18, 0,))
                                         conn.commit()
                                         conn.close()
                                         return redirect("/login")
