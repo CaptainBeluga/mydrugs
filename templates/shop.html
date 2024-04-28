@@ -89,7 +89,7 @@
           <div class="card-body">
             <h5 class="card-title special_font">{{pr.name}}</h5>
             <h6 class="card-subtitle mb-2 text-body-secondary">{{pr.subname}}</h6>
-            <p class="badge rounded-pill {{pr.class}}_products mt-3">{{pr.class.upper()}}</p>
+            <p class="badge rounded-pill {{pr.class}}_products mt-3">{{pr.class.replace('_',' ').upper()}}</p>
 
             <hr>
 

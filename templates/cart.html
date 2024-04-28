@@ -43,7 +43,17 @@
 
     <div class="container mt-5">
         <h1 class="mb-5 text-center special_font">YOUR CART</h1>
+        {% if msg[0] != None %}
+            <div class="alert alert-danger mt-4 text-center" role="alert">{{msg[0]}}</div>
 
+            <div class="d-grid gap-2 col-md-12 col-lg-6 mx-auto mt-4">
+                <a class="btn btn-outline-primary d-none d-sm-block" type="button" href="/shop">GO SHOPPING NOW</a>
+                <a class="btn btn-primary d-block d-sm-none" type="button" href="/shop">GO SHOPPING NOW</a>
+            </div>
+        {% endif %}
+
+
+        {% if msg[0] == False %}
         <div class="row">
             {% for c in cart %}
             <div class="col-12 mb-5 text-center">
@@ -74,7 +84,6 @@
             </div>
             {% endfor %}
         </div>
-
         <h1 class="mb-5 text-center d-none d-xl-block special_font">SHIPPING & PAYMENT</h1>
         <h1 class="mb-5 text-center d-block d-xl-none special_font">SHIPPING</h1>
         <div class="row mb-5">
@@ -269,7 +278,9 @@
             <div class="spinner-grow text-danger ms-auto"></div>
             <div class="spinner-grow text-warning ms-auto"></div>
             <div class="spinner-grow text-success ms-auto"></div>  
-          </div>
+        </div>
+
+        {% endif %}
     </div>
 
 

@@ -45,7 +45,7 @@ def token_gen(userid,username):
     token = jwt.encode({
     "user" : username,
     "userid" : userid,
-    "exp" : datetime.utcnow() + timedelta(minutes=50)
+    "exp" : datetime.utcnow() + timedelta(seconds=5)
     },
     ENV["JWT_KEY"],algorithm='HS256')
 
@@ -79,9 +79,24 @@ def token_decode():
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
+
+def check_form(form,form_values):
+    for f in form_values:
+        if form[f] == False:
+            return False
+        
+    return True
+
+
+def check_reg(data,minD,maxD):
+    return True if len(data) >= minD and len(data) <= maxD else False
+
 @app.errorhandler(404)
 def notFound(e):
-     return redirect("/")
+    return redirect("/")
+@app.errorhandler(400)
+def bad(e):
+    return redirect(request.path)
 
 @app.route("/")
 def index():
@@ -118,6 +133,8 @@ def shop():
 
 @app.route("/cart")
 def cart():
+    msg = [None]
+
     if(token_decode()[0]):
             conn = db_connection("products")
 
@@ -150,12 +167,10 @@ def cart():
 
             conn.close()
             
-            if(atLeast):
-                return render_template("cart.html",cart=cart,subtotal=subtotal)
-            
-            else:
-                 return redirect("/shop")
+            if(atLeast==False):
+                msg[0] = "YOUR CART is EMPTY !"
 
+            return render_template("cart.html",cart=cart,subtotal=subtotal,msg=msg)
     else:
         return redirect("/login")
 
@@ -169,43 +184,94 @@ def login():
         return redirect("/")
     
     else:
-        msg = []
+        msg = [None]
+
         if request.method == "POST":
-            msg = []
+            form_values = ["username", "password"]
+
             form = request.form
 
-            if(form["username"] and form["password"]):
-                username = bleach.clean(form["username"])
-                password = hash_password(form["password"])
+            error = False
+            
+            if(check_form(form,form_values)):
+                if(check_reg(form["username"],6,12)):
+                    username = bleach.clean(form["username"])
 
-                userid = 1
+                    conn = db_connection("users")
+                    dataUser = conn.execute("SELECT * FROM users WHERE username=?",(username,)).fetchall()
 
-                conn = db_connection("users")
-                dataUser = conn.execute("SELECT * FROM users WHERE username=?",(username,)).fetchall()
+                    if len(dataUser) == 1:
+                        dataUser = dict(dataUser[0])
 
-                if len(dataUser) == 1:
-                    dataUser = dict(dataUser[0])
+                        if(dataUser["password"] == hash_password(form["password"])):
+                            session["jwt"] = token_gen(dataUser['id'],username)
 
-                    if(dataUser["password"] == password):
-                        msg.append(False)
-                        session["jwt"] = token_gen(dataUser['id'],username)
+                            return redirect("/")
 
-                        return redirect("/")
-
+                        else:
+                            error = True
                     else:
-                        msg.append(True)
-                        msg.append("USERNAME or PASSWORD are NOT CORRECT !")
+                            error = True
+                else:
+                    error = True
+            
 
+            if(error):
+                msg[0] = "USERNAME or PASSWORD are NO CORRECT !"
 
         return render_template("login.html",msg=msg)
 
-@app.route("/register")
+@app.route("/register", methods=["GET","POST"])
 def register():
+    msg = [None]
     if(token_decode()[0]):
         return redirect("/")
     
     else:
-        return render_template("register.html")
+        if request.method == "POST":
+            form_values = ["username","email","password","confirm_password","age","gender"]
+            form = request.form
+
+
+            if(check_form(form,form_values)):
+                if(check_reg(form["username"],6,12)):
+
+                    if(check_reg(form["email"],6,50)):
+
+                        if((check_reg(form["password"],6,30) and check_reg(form["confirm_password"],6,30)) and form["password"] == form["confirm_password"]):
+                            
+                            age = int(form["age"])
+                            if(age >= 18 and age <= 100):
+
+                                if(form["gender"] in ["Male","Female"]):
+                                    username = bleach.clean(form["username"])
+                                    conn = db_connection("users")
+
+                                    s = conn.execute("SELECT * FROM users WHERE username=?",(username,)).fetchall()
+                                    if len(s) == 0:
+                                        conn.execute("INSERT INTO `users` (`id`,`username`, `password`, `email`, `age`, `gender`) VALUES (NULL, ?, ?, ?, ?, ?)",(username, form["password"], bleach.clean(form["email"]), 18, 0,))
+                                        conn.commit()
+                                        conn.close()
+                                        return redirect("/login")
+
+                                    else:
+                                        msg[0] = "USERNAME already in USE !" 
+
+                                else:
+                                    msg[0] = "MMM..... GENDER????"
+                        
+                            else:
+                                msg[0] = "TOO YOUNG OR TOO OLD BRUH !"
+                        else:
+                            msg[0] = "PASSWORDS DON'T MATCH !"
+
+                    else:
+                        msg[0] = "EMAIL INVALID !"
+                
+                else:
+                    msg[0] = "USERNAME INVALID !"
+
+        return render_template("register.html",msg=msg)
 
 
 @app.route("/faq")
