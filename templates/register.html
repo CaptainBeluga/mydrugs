@@ -57,6 +57,9 @@
             <hr>
 
             <form action="/register" method="post">
+                {% if msg[0] != None %}
+                    <div class="alert alert-danger mt-4" role="alert">{{msg[0]}}</div>
+                {% endif %}
                 <div class="row mt-5">
                     <div class="col-md-10 mx-auto">
                         <div class="row">
@@ -137,11 +140,6 @@
                                 </div>
                             </div>
                         </div>  
-
-
-                        {% if msg[0] != None %}
-                        <div class="alert alert-danger mt-4" role="alert">{{msg[0]}}</div>
-                        {% endif %}
 
                         <a href="/login" class="link-underline-primary">You already own a <span class="fw-bold text-primary">MyDrugs Account</span></a>
                     </div>

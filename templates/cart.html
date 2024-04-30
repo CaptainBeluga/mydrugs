@@ -36,6 +36,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/faq">FAQ</a>
                     </li>
+                                        
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">LOGOUT</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -53,14 +57,14 @@
         {% endif %}
 
 
-        {% if msg[0] == False %}
+        {% if msg[0] == None %}
         <div class="row">
             {% for c in cart %}
             <div class="col-12 mb-5 text-center">
                 <div class="card mx-auto">
 
                     <div class="card-header">
-                        <p class="badge rounded-pill {{c['class']}}_products mt-3">{{c['class'].upper()}}</p>
+                        <p class="badge rounded-pill {{c['class']}}_products mt-3">{{c['class'].replace('_',' ').upper()}}</p>
                     </div>
 
                     <div class="card-body cart_products">
@@ -74,11 +78,12 @@
                         <span class="ms-2 me-2">-</span>
                         <span class="font-monospace">{{c['eth']}} ETH</span>
 
-                        <div class="products_actions mt-3">
-                            <button class="btn btn-outline-danger">-</button>
-                            <span class="fw-bold fs-5 me-2 ms-2">{{c['quantity']}}</span>
-                            <button class="btn btn-outline-success">+</button>
-                        </div>
+                        <form class="products_actions mt-3" action="/cart" method="post">
+                            <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" />
+                            <button name="{{c['id']}}-" type="submit" class="btn btn-outline-danger">-</button>
+                            <span class="fw-bold fs-5 me-2 ms-2" style="font-family: 'Courier New', Courier, monospace;">{{c['quantity']}}</span>
+                            <button name="{{c['id']}}+" type="submit" class="btn btn-outline-success">+</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -88,34 +93,18 @@
         <h1 class="mb-5 text-center d-block d-xl-none special_font">SHIPPING</h1>
         <div class="row mb-5">
             <div class="col-xl-6 text-center">
-                <form action="javascript:alert('[+] SAVE !')" method="post">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="floatingInput" placeholder="" required>
-                                <label for="floatingInput">Username</label>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="form-floating mb-3">
-                                <input type="email" class="form-control" id="floatingInput" placeholder="" required>
-                                <label for="floatingInput">Email Address</label>
-                            </div>
-                        </div>
-                    </div>
-
+                <form action="/cart" method="post">
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="floatingInput" placeholder="" required>
+                                <input type="text" name="ps_address" class="form-control" id="floatingInput" placeholder="" required>
                                 <label for="floatingInput">PS Address</label> <!--Package Station-->
                             </div>
                         </div>
 
                         <div class="col-sm-4">
                             <div class="form-floating mb-3">
-                                <select class="form-select">
+                                <select class="form-select" name="state">
                                     <option value="Alabama" selected>Alabama</option>
                                     <option value="Alaska">Alaska</option>
                                     <option value="Arizona">Arizona</option>
@@ -173,24 +162,14 @@
 
                         <div class="col-sm-4">
                             <div class="form-floating mb-3">
-                                <input type="number" class="form-control" id="floatingInput" placeholder="" required>
+                                <input type="number" name="zipcode" class="form-control" id="floatingInput" placeholder="" required>
                                 <label for="floatingInput">Zip Code</label>
                             </div>
                         </div>
                     </div>
 
-                    <!--
-                if an user is already logged
-                
-                ```
-                <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="floatingInputDisabled" placeholder="name@example.com" disabled>
-                    <label for="floatingInputDisabled">Email address</label>
-                </div>
-                ```
+                    <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" />
 
-                show his info instead of let him type it manually
-            -->
                     <div class="row">
                         <div class="col-6 d-none d-sm-block">
                             <button type="submit" class="btn btn-outline-success">SAVE</button>

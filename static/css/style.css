@@ -39,6 +39,18 @@ form label,select,input, a{
     max-width: 150px;
 }
 
+
+.easter p{
+    opacity: 0;
+    transition: 1s;
+}
+
+.easter h1:hover + p{
+    opacity: 1;
+    transition: 0.5s;
+}
+
+
 .products_opacity{
     opacity: 0.3;
     transition: 0.3s;

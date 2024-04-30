@@ -1,6 +1,8 @@
-[+] AJAX JS (Fetch/XHR Requests)
+[+] AJAX JS (Fetch/XHR Requests) + REPLACE HTML RESPONSE
 
-[+] ORDER SYSTEM
+[+] ROUND SYSTEM (replace `round(value,4)`)
+
+[+] CODE OPTIMIZATION
 
 [+] TEST DEPLOYMENT on PythonAnyWhere
 
