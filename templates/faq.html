@@ -50,86 +50,24 @@
         <hr>
         <h3 class="mb-5 mt-4 text-center special_font">Frequently Asked Questions</h3>
 
-        <div class="accordion mb-5" id="accOne">
+        {% for faq in faqs %}
+        <div class="accordion mb-5" id="acc{{faq.id}}">
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                        Is My Purshase Completely Secure Through Your Shop When I Make A Purchase?
+                        data-bs-target="#collapse{{faq.id}}" aria-expanded="true" aria-controls="collapse{{faq.id}}">
+                        {{faq.question}}
                     </button>
                 </h2>
-                <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accOne">
+                <div id="collapse{{faq.id}}" class="accordion-collapse collapse" data-bs-parent="#{{faq.id}}">
                     <div class="accordion-body description">
-                        Yes. Just add the desired quantity to the cart and enter your address at the checkout. Your personal data is automatically <strong>encrypted</strong> using <strong>PGP</strong> and deleted after the order is dispatched. Our team of professionals then packs the goods in <strong>clean-room conditions</strong>, and ensures <strong>smooth</strong> and <strong>secure</strong> processing.
+                        {{faq.answer}}
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="accordion mb-5" id="accTwo">
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                        Is Your Product Safe?
-                    </button>
-                </h2>
-                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accTwo">
-                    <div class="accordion-body description">
-                        <strong>Nobody</strong> has claimed that doing drugs was safe. However as long as you follow the <a href="#mdma" class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
-                            How Can I Safely Partake In Mdma Consumption</a> section there should not be any issues. Do <strong>NOT</strong> take MDMA <strong>if you are also under any perscriptions or doing any other drugs</strong>. It is also recomended not to take MDMA with any sort of alcohol as it might cause irreversable damage to your immune system and overall health.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="accordion mb-5" id="accThree">
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                        How Can I Receive My Order Anonymously?
-                    </button>
-                </h2>
-                <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accThree">
-                    <div class="accordion-body description">
-                        Our shipping department operates around the clock to ensure <strong>FAST</strong> and <strong>RISK-FREE</strong> shipping. The delivery ussually arrives within a <strong>few days</strong>. Your order can be sent to any valid <strong>Postal Address</strong>, <strong>PO Box</strong>, or <strong>Package Station</strong>. Thanks to our highly complex and decentralized system, the transfer to the logistics service provider is already <strong>anonymous</strong> and <strong>cannot be traced back</strong>.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="accordion mb-5" id="accFour">
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
-                        Can I Really Only Pay With Cryptocurrency?
-                    </button>
-                </h2>
-                <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accFour">
-                    <div class="accordion-body description">
-                        Yes. We only accept payments in <strong>Bitcoin</strong> and <strong>Ethereum</strong>. The payment procedure is not complicated. You just need to set up a <strong>suitable wallet</strong>. We do <strong>NOT</strong> offer Payback or other bonus systems. We weren't born yesterday.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="accordion mb-5" id="accFive">
-            <div class="accordion-item" id="mdma">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
-                        How Can I Safely Partake In MDMA Consumption?
-                    </button>
-                </h2>
-                <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#accFive">
-                    <div class="accordion-body description">
-                        When taking MDMA, it is recommended <strong>NOT</strong> to exceed a maximum dose of <strong>1.5 mg</strong> MDMA per kg bodyweight for <strong>MEN</strong> and <strong>1.3 mg</strong> MDMA per kg bodyweight for <strong>WOMEN</strong>. In general, a dose of <strong>120 mg should not</strong> be exceeded. After ingestion, be sure to <strong>hydrate</strong> sufficiently. Only obtain MDMA from <strong>trustworth sources</strong> (<strong>like us</strong>).
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
 
         
     </div>

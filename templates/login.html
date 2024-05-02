@@ -56,36 +56,36 @@
 
             <hr>
 
-            <form action="/login" method="post">
-                <div class="row mt-5">
-                    <div class="col-md-10 mx-auto">
-                        <div class="form-floating mb-3">
-                            <input type="text" name="username" class="form-control" id="floatingInput" minlength="6" maxlength="12" placeholder="" required>
-                            <label>USERNAME</label>
-                        </div>
-
-                        <div class="form-floating mb-3">
-                            <input type="password" name="password" class="form-control" id="floatingInput" minlength="8" maxlength="30" placeholder="" required>
-                            <label>PASSWORD</label>
-                        </div>
-                        
-                        <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" />
-
-                        <a href="/register" class="link-underline-primary">Haven't a <span class="fw-bold text-primary">MyDrugs Account</span> yet?</a>
-                        
-                        <div class="d-grid gap-2 mb-3 mt-3">
-                            <button class="btn btn-primary" type="submit">LOGIN</button>
-                        </div>
-
-                        {% if msg[0] != None %}
-                            <div class="alert alert-danger mt-4" role="alert">{{msg[0]}}</div>
-                        {% endif %}
+            <div class="row mt-5 form">
+                <div class="col-md-10 mx-auto">
+                    <div class="form-floating mb-3">
+                        <input type="text" id="username" class="form-control" placeholder="">
+                        <label>USERNAME</label>
                     </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="password" id="password" class="form-control" placeholder="">
+                        <label>PASSWORD</label>
+                    </div>
+                    
+                    <input type="hidden" id="csrf_token" value = "{{ csrf_token() }}" />
+
+                    <a href="/register" class="link-underline-primary">Haven't a <span class="fw-bold text-primary">MyDrugs Account</span> yet?</a>
+                    
+                    <div class="d-grid gap-2 mb-3 mt-3">
+                        <button class="btn btn-primary" onclick="login()">LOGIN</button>
+                    </div>
+
+                    {% if msg[0] != None %}
+                        <div class="alert alert-danger mt-4" role="alert">{{msg[0]}}</div>
+                    {% endif %}
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="../static/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>

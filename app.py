@@ -99,11 +99,14 @@ def check_reg(data,minD,maxD):
 
 
 def subtotal_count(price,pm,quantity):
-    return round(round(price/get_price(pm),4) * quantity,4)
+    return rnd(rnd(price/get_price(pm))*quantity)
 
 def subtotal_round(subtotal):
     for x in range(len(subtotal)):
-        subtotal[x] = round(subtotal[x],4)
+        subtotal[x] = rnd(subtotal[x])
+
+def rnd(number):
+    return round(number,4)
 
 @app.errorhandler(404)
 def notFound(e):
@@ -124,7 +127,7 @@ def index():
 @app.route("/shop",methods=['POST', 'GET'])
 def shop():
     if request.method == "POST":
-        f = list(request.form)[1]
+        f = dict(request.form)["id"]
 
         try:
             session[f] += 1
@@ -132,41 +135,41 @@ def shop():
         except KeyError:
              session[f] = 1
 
-        return redirect("/cart")
+    if(token_decode()[0]):
+        conn = db_connection("products")
+        pr = conn.execute("SELECT * FROM products").fetchall()
+        conn.close()
 
+        return render_template("shop.html",products=pr,market=[get_price("BTC"),get_price("ETH")],give_rating=give_rating,rnd=rnd)
     else:
-        if(token_decode()[0]):
-            conn = db_connection("products")
-            pr = conn.execute("SELECT * FROM products").fetchall()
-            conn.close()
-
-            return render_template("shop.html",products=pr,market=[get_price("BTC"),get_price("ETH")],give_rating=give_rating,round=round)
-        else:
-            return redirect("/login")
+        return redirect("/login")
 
 
 @app.route("/cart",methods=["GET", "POST"])
 def cart():
     msg = [None]
+    success = False
 
     if request.method == "POST":
         try:
             form = request.form
+                
+            if(len(form)==2): #item management
+                form = dict(form)["id"]
 
-            if(len(form)==2):
-                form = list(form)[1] #grab the PRODUCT ID
-                product_id = form.replace("+","").replace("-","")
+                product_id = form[:len(form)-1] #10+ -> 10
 
-                if form[1] == "+":
+                #form[len(form)-1] -> action => + | -
+                if form[len(form)-1] == "+":
                     session[product_id] += 1
                 
-                elif form[1] == "-":
+                elif form[len(form)-1] == "-":
                     session[product_id] -= 1
                     
                     if(session[product_id] == 0):
                         session.pop(product_id)
             
-            elif(len(form)==4):
+            elif(len(form)==4): #order save
                 if(form['state'] in ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]):
                     zipcode = int(form["zipcode"])
 
@@ -188,16 +191,16 @@ def cart():
 
                                 subtotal_round(subtot)
 
-
-                    
                     conn.execute("INSERT INTO `orders` (`id`,`username`, `items` ,`subtotal`  ,`ps_address`, `state`, `zipcode`, `paid`, `delivered`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)",(token_decode()[1]["username"], items_string, f"{subtot[0]} - {subtot[1]}",bleach.clean(form["ps_address"]), form["state"], zipcode, 0, 0,))
                     conn.commit()
                     conn.close()
 
                     pop_session(toExcept)
 
-        except Exception as e:
-            print(e) #someone edit the form values (reject the request)
+                    success = True
+
+        except:
+            #someone edit the form values (reject the request)
             pass
         
     if(token_decode()[0]):
@@ -215,8 +218,8 @@ def cart():
                         #prices
                         val["quantity"] = session[f]
 
-                        val["btc"] = round(val["price"]/get_price("BTC"),4)
-                        val["eth"] = round(val["price"]/get_price("ETH"),4)
+                        val["btc"] = rnd(val["price"]/get_price("BTC"))
+                        val["eth"] = rnd(val["price"]/get_price("ETH"))
 
 
                         subtotal[0]+= subtotal_count(val['price'],"BTC",val['quantity'])
@@ -228,8 +231,11 @@ def cart():
 
             conn.close()
             
-            if(len(cart)==0):
+            if(len(cart)==0 and success == False):
                 msg[0] = "YOUR CART is EMPTY !"
+            
+            elif success:
+                msg[0] = "S-ORDER SENT !"
 
             return render_template("cart.html",cart=cart,subtotal=subtotal,msg=msg)
     else:
@@ -336,7 +342,11 @@ def register():
 @app.route("/faq")
 def faq():
     if(token_decode()[0]):
-            return render_template("faq.html") 
+            conn = db_connection("faq")
+            faqs = conn.execute("SELECT * FROM faq").fetchall()
+            conn.close()
+    
+            return render_template("faq.html",faqs=faqs) 
     else:
         return redirect("/login")
     

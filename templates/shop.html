@@ -80,6 +80,20 @@
     </div>
   </div>
 
+  <div class="modal fade" id="addCartModal" tabindex="-1" aria-labelledby="addCartLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="fs-5 mx-auto" id="addCartLabel">PRODUCT ADDED !</h1>
+        </div>
+        <div class="modal-footer mx-auto">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">CLOSE</button>
+          <a href="/cart" type="button" class="btn btn-success">CART</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container-fluid text-center mt-5">
     <div class="easter">
       <h1 class="mb-4 special_font">PRODUCTS</h1>
@@ -87,13 +101,12 @@
       <p class="mb-5 description">Il Mio Aperitivo È Il Tuo Coma Etilico (cit. ilDottore 🦄)</p>
     </div>
 
-
     <div class="row">
 
       {% for pr in products %}
       <div class="col-sm-6 col-lg-4 col-xl-3 flex">
-        <form class="card mx-auto border-light border-3 products_opacity shadow p-1 mb-5 bg-body-tertiary rounded"
-          style="width: 18rem;" method="post" action="/shop">
+        <div class="card mx-auto border-light border-3 products_opacity shadow p-1 mb-5 bg-body-tertiary rounded"
+          style="width: 18rem;">
           <img src="./static/img/products/{{pr.name.replace(' ','').lower()}}.png" class="card-img-top img-fluid">
           <div class="card-body">
             <h5 class="card-title special_font">{{pr.name}}</h5>
@@ -107,10 +120,10 @@
             <hr>
 
             <div class="price">
-              <span class="fw-bold font-monospace">{{round(pr.price / market[0],4)}} BTC</span>
+              <span class="fw-bold font-monospace">{{rnd(pr.price / market[0])}} BTC</span>
               <img src="./static/img/payment_methods/btc/btc.png">
               <br><br>
-              <span class="fw-bold font-monospace">{{round(pr.price / market[1],4)}} ETH</span>
+              <span class="fw-bold font-monospace">{{rnd(pr.price / market[1])}} ETH</span>
               <img src="./static/img/payment_methods/eth/eth.png">
             </div>
 
@@ -131,16 +144,21 @@
               
             </div>
             <hr>
-            <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" />
-            <button name="{{pr.id}}" class="btn btn-outline-primary mt-3" type="submit">ADD TO CART</button><br>
+
+            <input type="hidden" id="csrf_token" value = "{{ csrf_token() }}" />
+            <button id="{{pr.id}}" class="btn btn-outline-primary mt-3" onclick="shop_to_cart(this.id)">ADD TO CART</button><br>
           </div>
-        </form>
+
+          <div class="spinner-border text-primary mx-auto mt-4 mb-4" role="status" id="{{pr.id}}-spinner" style="display: none;"></div>
+        </div>
       </div>
 
       {% endfor %}
   </div>
 
 
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="../static/js/script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>

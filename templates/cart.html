@@ -48,14 +48,23 @@
     <div class="container mt-5">
         <h1 class="mb-5 text-center special_font">YOUR CART</h1>
         {% if msg[0] != None %}
+
+            {% if msg[0][:2] == "S-" %}
+                
+                <div class="alert alert-success mt-4 text-center" role="alert">{{msg[0][2:]}}</div>
+            {% endif %}
+
+            
+            {% if msg[0][:2] != "S-" %}
             <div class="alert alert-danger mt-4 text-center" role="alert">{{msg[0]}}</div>
 
-            <div class="d-grid gap-2 col-md-12 col-lg-6 mx-auto mt-4">
-                <a class="btn btn-outline-primary d-none d-sm-block" type="button" href="/shop">GO SHOPPING NOW</a>
-                <a class="btn btn-primary d-block d-sm-none" type="button" href="/shop">GO SHOPPING NOW</a>
-            </div>
-        {% endif %}
+            {% endif %}
 
+        <div class="d-grid gap-2 col-md-12 col-lg-6 mx-auto mt-4">
+            <a class="btn btn-outline-primary d-none d-sm-block" type="button" href="/shop">GO SHOPPING AGAIN</a>
+            <a class="btn btn-primary d-block d-sm-none" type="button" href="/shop">GO SHOPPING AGAIN</a>
+        </div>
+        {% endif %}
 
         {% if msg[0] == None %}
         <div class="row">
@@ -77,13 +86,17 @@
                         <span class="font-monospace">{{c['btc']}} BTC</span>
                         <span class="ms-2 me-2">-</span>
                         <span class="font-monospace">{{c['eth']}} ETH</span>
+                        
+                        <div class="container mt-4 mb-4" id="{{c['id']}}-spinner" style="display:none">
+                            <div class="spinner-border text-primary" role="status" id="{{c['id']}}-color"></div>
+                        </div>
 
-                        <form class="products_actions mt-3" action="/cart" method="post">
-                            <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" />
-                            <button name="{{c['id']}}-" type="submit" class="btn btn-outline-danger">-</button>
+                        <div class="products_actions mt-3">
+                            <input type="hidden" id="csrf_token" value = "{{ csrf_token() }}" />
+                            <button id="{{c['id']}}-" onclick="item_managment(this.id)" class="btn btn-outline-danger">-</button>
                             <span class="fw-bold fs-5 me-2 ms-2" style="font-family: 'Courier New', Courier, monospace;">{{c['quantity']}}</span>
-                            <button name="{{c['id']}}+" type="submit" class="btn btn-outline-success">+</button>
-                        </form>
+                            <button id="{{c['id']}}+" onclick="item_managment(this.id)" class="btn btn-outline-success">+</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -94,7 +107,7 @@
         <div class="row mb-5">
             <div class="col-xl-6 text-center">
                 <form action="/cart" method="post">
-                    <div class="row">
+                    <div class="row form">
                         <div class="col-sm-4">
                             <div class="form-floating mb-3">
                                 <input type="text" name="ps_address" class="form-control" id="floatingInput" placeholder="" required>
@@ -176,7 +189,6 @@
                         </div>
 
                         <div class="col-6 d-none d-sm-block">
-                            <!--hide if already logged-->
                             <button type="reset" class="btn btn-outline-danger">RESET</button>
                         </div>
                     </div>
@@ -187,7 +199,6 @@
                         </div>
 
                         <div class="col-6 d-block d-sm-none">
-                            <!--hide if already logged-->
                             <button type="reset" class="btn btn-danger">RESET</button>
                         </div>
                     </div>
@@ -230,7 +241,6 @@
                                     <p>ETH PRICE: <span class="fw-bold">{{c['eth'] * c['quantity']}} ETH</span></p>
                                 </div>
                             </div>
-                            
                         </li>
                     </ul>
 
@@ -262,7 +272,9 @@
         {% endif %}
     </div>
 
-
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="../static/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>

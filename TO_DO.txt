@@ -1,8 +1,14 @@
 [+] AJAX JS (Fetch/XHR Requests) + REPLACE HTML RESPONSE
 
-[+] ROUND SYSTEM (replace `round(value,4)`)
+	- CART MANAGMENT => V
 
-[+] CODE OPTIMIZATION
+	- SHOP => V
+
+	- REGISTER (03 May in LAI-3)
+
+	- LOGIN => V
+
+[+] PRODUCTS DICTIONARY in SESSION
 
 [+] TEST DEPLOYMENT on PythonAnyWhere
 

@@ -19,11 +19,11 @@ nav a{
     font-family: var(--title);
 }
 
-form{
+.form{
     font-family: var(--title);
 }
 
-form label,select,input, a{
+.form label,select,input, a{
     font-family: var(--description);
 }
 
