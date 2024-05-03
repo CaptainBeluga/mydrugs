@@ -254,11 +254,9 @@ def login():
         msg = [None]
 
         if request.method == "POST":
-            form_values = ["username", "password"]
+            form_values = ["csrf_token", "username", "password"]
 
             form = request.form
-
-            error = False
             
             if(check_form(form,form_values)):
                 if(check_reg(form["username"],6,12)):
@@ -272,17 +270,16 @@ def login():
 
                         if(dataUser["password"] == hash_password(form["password"])):
                             session["jwt"] = token_gen(dataUser['id'],username)
-
-                            return redirect("/")
+                            return "200"
 
                         else:
-                            msg[0] = "USERNAME or PASSWORD are NO CORRECT !"
+                            msg[0] = "USERNAME or PASSWORD are NOT CORRECT !"
 
                     else:
-                        msg[0] = "USERNAME or PASSWORD are NO CORRECT !"
+                        msg[0] = "USERNAME or PASSWORD are NOT CORRECT !"
 
                 else:
-                    msg[0] = "USERNAME or PASSWORD are NO CORRECT !"
+                    msg[0] = "USERNAME or PASSWORD are NOT CORRECT !"
 
         return render_template("login.html",msg=msg)
 
@@ -302,34 +299,45 @@ def register():
                 if(check_reg(form["username"],6,12)):
 
                     if(check_reg(form["email"],6,50)):
+                        email = bleach.clean(form['email'])
 
-                        if((check_reg(form["password"],6,30) and check_reg(form["confirm_password"],6,30)) and form["password"] == form["confirm_password"]):
-                            
-                            age = int(form["age"])
-                            if(age >= 18 and age <= 100):
+                        if len(email.split("@")) == 2 and email.split("@")[1].replace(" ","") != "" and len(email.split("@")[1]) >= 5:
 
-                                if(form["gender"] in ["Male","Female"]):
-                                    username = bleach.clean(form["username"])
-                                    conn = db_connection("users")
+                            if((check_reg(form["password"],6,30) and check_reg(form["confirm_password"],6,30)) and form["password"] == form["confirm_password"]):
+                                
+                                try:
+                                    age = int(form["age"])
+                                    if(age >= 18 and age <= 99):
 
-                                    s = conn.execute("SELECT * FROM users WHERE username=?",(username,)).fetchall()
-                                    if len(s) == 0:
-                                        conn.execute("INSERT INTO `users` (`id`,`username`, `password`, `email`, `age`, `gender`) VALUES (NULL, ?, ?, ?, ?, ?)",(username, hash_password(form["password"]), bleach.clean(form["email"]), age,1 if form["gender"] == "Male" else 0,))
-                                        conn.commit()
-                                        conn.close()
-                                        return redirect("/login")
+                                        if(form["gender"] in ["Male","Female"]):
+                                            username = bleach.clean(form["username"])
+                                            conn = db_connection("users")
+
+                                            s = conn.execute("SELECT * FROM users WHERE username=?",(username,)).fetchall()
+                                            if len(s) == 0:
+                                                conn.execute("INSERT INTO `users` (`id`,`username`, `password`, `email`, `age`, `gender`) VALUES (NULL, ?, ?, ?, ?, ?)",(username, hash_password(form["password"]), email, age,1 if form["gender"] == "Male" else 0,))
+                                                conn.commit()
+                                                conn.close()
+                                                
+                                                return "200"
+
+                                            else:
+                                                msg[0] = "USERNAME already in USE !" 
+
+                                        else:
+                                            msg[0] = "MMM..... GENDER????"
 
                                     else:
-                                        msg[0] = "USERNAME already in USE !" 
-
-                                else:
-                                    msg[0] = "MMM..... GENDER????"
-                        
+                                        msg[0] = "TOO YOUNG OR TOO OLD BRUH !"
+                                except:
+                                    msg[0] = "TYPE A VALID AGE !"
+                            
+                               
                             else:
-                                msg[0] = "TOO YOUNG OR TOO OLD BRUH !"
-                        else:
-                            msg[0] = "PASSWORDS DON'T MATCH !"
+                                msg[0] = "PASSWORDS DON'T MATCH !"
 
+                        else:
+                            msg[0] = "EMAIL INVALID (e.g. example@example.com) !"
                     else:
                         msg[0] = "EMAIL INVALID !"
                 

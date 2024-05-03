@@ -133,6 +133,10 @@ nav a{
         animation-iteration-count: infinite;
     }
 
+    .products_opacity{
+        opacity: 1;
+    }
+
     @keyframes changeOpacity {
         from{opacity: 0;}
         to{opacity: 1;}

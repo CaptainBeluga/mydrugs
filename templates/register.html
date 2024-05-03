@@ -56,98 +56,87 @@
 
             <hr>
 
-            <form action="/register" method="post">
-                {% if msg[0] != None %}
-                    <div class="alert alert-danger mt-4" role="alert">{{msg[0]}}</div>
-                {% endif %}
-                <div class="row mt-5 form">
-                    <div class="col-md-10 mx-auto">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <input type="text" name="username" class="form-control" id="floatingInput" minlength="6" maxlength="12" placeholder="" required>
-                                    <label>USERNAME</label>
-                                    <div class="form-text mt-2 mb-4">Type something of Anonymous but NOT Sospicious</div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    <input type="email" name="email" class="form-control" id="floatingInput" minlength="6" maxlength="50" placeholder="" required>
-                                    <label>EMAIL ADDRESS</label>
-                                    <div class="form-text mt-2">Use a Temp / Anonymous EMAIL</div>
-
-                                </div>
+            {% if msg[0] != None %}
+                <div class="alert alert-danger mt-4" role="alert">{{msg[0]}}</div>
+            {% endif %}
+            <div class="row mt-5 form">
+                <div class="col-md-10 mx-auto">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" id="username" class="form-control" placeholder="">
+                                <label>USERNAME</label>
+                                <div class="form-text mt-2 mb-4">Type something of Anonymous but NOT Sospicious</div>
                             </div>
                         </div>
 
-                        <hr>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3 mt-3">
-                                    <input type="password" name="password" class="form-control" id="floatingInput" minlength="8" maxlength="30" placeholder="" required>
-                                    <label>PASSWORD</label>
-                                    <div class="form-text mt-2 mb-4">Use a Random String of Mixed-Case Letters, Numbers and Symbols</div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3 mt-3">
-                                    <input type="password" name="confirm_password" class="form-control" id="floatingInput" minlength="8" maxlength="30" placeholder="" required>
-                                    <label>CONFIRM PASSWORD</label>
-                                    <div class="form-text mt-2 mb-4">Make sure it matches or I'll do it for you :)</div>
-                                </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="email" id="email" class="form-control" placeholder="">
+                                <label>EMAIL ADDRESS</label>
+                                <div class="form-text mt-2">Use a Temp / Anonymous EMAIL</div>
                             </div>
                         </div>
-
-
-                        <hr>
-
-                        <div class="row">
-                            <div class="col-6">
-                                <div class="form-floating mb-3 mt-3">
-                                    <input type="number" name="age" class="form-control" id="floatingInput" min="18" max="100" placeholder="" required>
-                                    <label>AGE</label>
-                                    <div class="form-text mt-2 mb-4">How old are you?</div>
-                                </div>
-                            </div>
-
-                            <div class="col-6">
-                                <div class="form-floating mb-3 mt-3">
-                                    <select class="form-select" name="gender">
-                                        <option value="Male" selected>Male</option>
-                                        <option value="Female">Female</option>
-                                    </select>
-                                    <label for="floatingSelect">GENDER</label>
-                                    <div class="form-text mt-2 mb-4">How do you identify yourself?</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" />
-
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="d-grid gap-2 mb-3">
-                                    <button class="btn btn-warning" type="submit">REGISTER</button>
-                                  </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="d-grid gap-2 mb-3">
-                                    <button class="btn btn-danger" type="reset">RESET</button>
-                                </div>
-                            </div>
-                        </div>  
-
-                        <a href="/login" class="link-underline-primary">You already own a <span class="fw-bold text-primary">MyDrugs Account</span></a>
                     </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3 mt-3">
+                                <input type="password" id="password" class="form-control" placeholder="">
+                                <label>PASSWORD</label>
+                                <div class="form-text mt-2 mb-4">Use a Random String of Mixed-Case Letters, Numbers and Symbols</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3 mt-3">
+                                <input type="password" id="confirm_password" class="form-control" placeholder="">
+                                <label>CONFIRM PASSWORD</label>
+                                <div class="form-text mt-2 mb-4">Make sure it matches or I'll do it for you :)</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-floating mb-3 mt-3">
+                                <input type="number" id="age" class="form-control" placeholder="">
+                                <label>AGE</label>
+                                <div class="form-text mt-2 mb-4">How old are you?</div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-floating mb-3 mt-3">
+                                <select class="form-select" id="gender">
+                                    <option value="Male" selected>Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                                <label for="floatingSelect">GENDER</label>
+                                <div class="form-text mt-2 mb-4">How do you identify yourself?</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="csrf_token" value = "{{ csrf_token() }}" />
+
+                    <div class="d-grid gap-2 mb-3">
+                        <button class="btn btn-warning" onclick="register()">REGISTER</button>
+                    </div>
+
+                    <a href="/login" class="link-underline-primary">You already own a <span class="fw-bold text-primary">MyDrugs Account</span></a>
                 </div>
-            </form>
+            </div>
         </div>        
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="../static/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
