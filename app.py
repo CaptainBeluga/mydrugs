@@ -106,7 +106,7 @@ def subtotal_round(subtotal):
         subtotal[x] = rnd(subtotal[x])
 
 def rnd(number):
-    return round(number,4)
+    return round(number,6)
 
 @app.errorhandler(404)
 def notFound(e):
@@ -237,7 +237,7 @@ def cart():
             elif success:
                 msg[0] = "S-ORDER SENT !"
 
-            return render_template("cart.html",cart=cart,subtotal=subtotal,msg=msg)
+            return render_template("cart.html",cart=cart,subtotal=subtotal,msg=msg,rnd=rnd)
     else:
         return redirect("/login")
 

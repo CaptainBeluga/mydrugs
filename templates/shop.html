@@ -114,9 +114,10 @@
 
             <hr>
 
-            <p class="card-text description">{{pr.description}}</p>
-
-            <hr>
+            <div class="d-none d-sm-block">
+              <p class="card-text description">{{pr.description}}</p>
+              <hr>
+            </div>
 
             <div class="price">
               <span class="fw-bold font-monospace">{{rnd(pr.price / market[0])}} BTC</span>
