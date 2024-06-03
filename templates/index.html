@@ -37,6 +37,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/faq">FAQ</a>
                     </li>
+
+                    {% if isAdmin %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin">ADMIN</a>
+                    </li>
+                    {% endif %}
+                    
                     
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">LOGOUT</a>

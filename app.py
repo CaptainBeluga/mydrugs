@@ -2,9 +2,11 @@ from flask import Flask, render_template, session, request, redirect
 from flask_wtf import CSRFProtect
 import jwt
 import hashlib
+import string
 from datetime import datetime,timedelta
 import requests
 import sqlite3
+import secrets
 import bleach
 from dotenv import dotenv_values
 
@@ -40,11 +42,19 @@ def give_rating(rating):
     
     return [c,h,5-(c+h)]
 
-def token_gen(userid,username):
+
+#avoid get same `id` in ADMIN DASHBOARD
+def uname():
+    l = ""
+    for _ in range(7): l+= secrets.choice(string.ascii_lowercase+string.ascii_uppercase) 
+    return l
+
+def token_gen(userid,username,isAdmin):
     token = jwt.encode({
     "username" : username,
     "userid" : userid,
-    "exp" : datetime.utcnow() + timedelta(seconds=3600)
+    "isAdmin" : isAdmin,
+    "exp" : datetime.utcnow() + timedelta(seconds=3600) #3600
     },
     ENV["JWT_KEY"],algorithm='HS256')
 
@@ -108,17 +118,18 @@ def subtotal_round(subtotal):
 def rnd(number):
     return round(number,6)
 
-@app.errorhandler(404)
-def notFound(e):
-    return redirect("/")
-@app.errorhandler(400)
-def bad(e):
-    return redirect(request.path)
+# @app.errorhandler(404)
+# def notFound(e):
+#     return redirect("/")
+# @app.errorhandler(400)
+# def bad(e):
+#     return redirect(request.path)
 
 @app.route("/")
 def index():
-    if(token_decode()[0]):
-            return render_template("index.html",username=token_decode()[1]["username"]) 
+    t = token_decode()
+    if(t[0]):
+            return render_template("index.html",username=t[1]["username"],isAdmin=t[1]["isAdmin"]) 
     else:
         return redirect("/login")
 
@@ -191,7 +202,7 @@ def cart():
 
                                 subtotal_round(subtot)
 
-                    conn.execute("INSERT INTO `orders` (`id`,`username`, `items` ,`subtotal`  ,`ps_address`, `state`, `zipcode`, `paid`, `delivered`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)",(token_decode()[1]["username"], items_string, f"{subtot[0]} - {subtot[1]}",bleach.clean(form["ps_address"]), form["state"], zipcode, 0, 0,))
+                    conn.execute("INSERT INTO `orders` (`id`,`username`, `items` ,`subtotal`  ,`ps_address`, `state`, `zipcode`, `paid`, `delivered`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)",(token_decode()[1]["username"], items_string[:len(items_string)-2], f"{subtot[0]} - {subtot[1]}",bleach.clean(form["ps_address"]), form["state"], zipcode, 0, 0,))
                     conn.commit()
                     conn.close()
 
@@ -269,7 +280,7 @@ def login():
                         dataUser = dict(dataUser[0])
 
                         if(dataUser["password"] == hash_password(form["password"])):
-                            session["jwt"] = token_gen(dataUser['id'],username)
+                            session["jwt"] = token_gen(dataUser['id'],username,dataUser["isAdmin"])
                             return "200"
 
                         else:
@@ -315,7 +326,7 @@ def register():
 
                                             s = conn.execute("SELECT * FROM users WHERE username=?",(username,)).fetchall()
                                             if len(s) == 0:
-                                                conn.execute("INSERT INTO `users` (`id`,`username`, `password`, `email`, `age`, `gender`) VALUES (NULL, ?, ?, ?, ?, ?)",(username, hash_password(form["password"]), email, age,1 if form["gender"] == "Male" else 0,))
+                                                conn.execute("INSERT INTO `users` (`id`,`username`, `password`, `email`, `age`, `gender`,`isAdmin`) VALUES (NULL, ?, ?, ?, ?, ?, 0)",(username, hash_password(form["password"]), email, age,1 if form["gender"] == "Male" else 0,))
                                                 conn.commit()
                                                 conn.close()
                                                 
@@ -364,4 +375,89 @@ def logout():
     if(token_decode()[0]):
         pop_session([])
 
+    return redirect("/login")
+
+
+
+@app.route("/admin",methods=["GET","POST","DELETE","PUT"])
+def admin():
+    t = token_decode()
+
+    if(t[0]):
+        conn = db_connection("users")
+        if(t[1]["isAdmin"] and dict(conn.execute("SELECT * FROM users WHERE id = ?",(t[1]["userid"],)).fetchall()[0])["isAdmin"]):
+            conn.close()
+
+            exclude = ["path","id","csrf_token"]
+
+
+            if request.method == "PUT":
+                r = request.form
+
+                if(len(request.files)==1):
+                    #f = request.files["editFile"]
+                    f = request.files[list(request.files)[0]] #getFirstFile
+                    f.save(f"./static/img/products/{r['name'].replace(' ','').lower()}.png")
+
+
+                setMsg = ""
+                for l in r:
+                    if l not in exclude:
+                        setMsg += f'`{l}` = "{bleach.clean(r[l])}", '
+
+                setMsg = setMsg[:len(setMsg)-2]
+
+                conn = db_connection(r["path"])
+                
+                conn.execute(f'UPDATE `{r["path"]}` SET {setMsg} WHERE id = ?', (bleach.clean(r['id']),))
+                conn.commit()
+                conn.close()
+            
+            elif request.method == "POST":
+                r = request.form
+
+                if(len(request.files)==1):
+                    #f = request.files["editFile"]
+                    f = request.files[list(request.files)[0]] #getFirstFile
+                    f.save(f"./static/img/products/{r['name'].replace(' ','').lower()}.png")
+
+                
+                keys = ""
+                values = ""
+
+                for l in r:
+                    if l not in exclude:
+                        keys += f"`{l}` , "
+                        values += f'"{bleach.clean(r[l])}" , '
+
+                keys = keys[:len(keys)-3]
+                values = values[:len(values)-3]
+
+                conn = db_connection(r["path"])
+                conn.execute(f"INSERT INTO `{r['path']}` ({keys}) VALUES ({values})")
+                conn.commit()
+                conn.close()
+                        
+            elif request.method == "DELETE":
+                r = request.form
+                conn = db_connection(r["path"])
+                
+                conn.execute(f'DELETE FROM `{r["path"]}` WHERE `id` = ? ',(bleach.clean(r['id']),))
+                conn.commit()
+                conn.close()
+
+
+            db = ["orders", "products", "users", "faq"]
+            elements = {}
+
+            for d in db:
+                conn = db_connection(d)
+                j = conn.execute(f"SELECT * FROM {d}").fetchall()
+                elements[d] = j
+                conn.close()
+
+            return render_template("admin.html",data=elements,len=len,uname=uname)
+
+        else:
+            return redirect("/logout")
     return redirect("/login")

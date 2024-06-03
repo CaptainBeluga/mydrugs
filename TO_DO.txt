@@ -1,13 +1,3 @@
-[+] PRODUCTS DICTIONARY in "SESSION"
-
-[+] ADMIN DASHBOARD (CRUD MENU)
-	
-	- orders
-	- users
-	- faq
-	- products
-
-
 ----- OPTIONAL -----
 
 
