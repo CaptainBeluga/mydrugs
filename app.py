@@ -24,6 +24,11 @@ def db_connection(db_name):
     
     return conn
 
+def file_checker(r, name):
+    if(len(r)==1):
+        f = r[list(r)[0]] #getFirstFile
+        f.save(f"./static/img/products/{name.replace(' ','').lower()}.png")
+
 def get_json(tJson):
      return float(tJson.json()["data"]["buy"])
 
@@ -394,11 +399,7 @@ def admin():
             if request.method == "PUT":
                 r = request.form
 
-                if(len(request.files)==1):
-                    #f = request.files["editFile"]
-                    f = request.files[list(request.files)[0]] #getFirstFile
-                    f.save(f"./static/img/products/{r['name'].replace(' ','').lower()}.png")
-
+                file_checker(request.files, r['name'])
 
                 setMsg = ""
                 for l in r:
@@ -416,10 +417,7 @@ def admin():
             elif request.method == "POST":
                 r = request.form
 
-                if(len(request.files)==1):
-                    #f = request.files["editFile"]
-                    f = request.files[list(request.files)[0]] #getFirstFile
-                    f.save(f"./static/img/products/{r['name'].replace(' ','').lower()}.png")
+                file_checker(request.files, r['name'])
 
                 
                 keys = ""
