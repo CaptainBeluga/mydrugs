@@ -27,7 +27,7 @@ def db_connection(db_name):
 def file_checker(r, name):
     if(len(r)==1):
         f = r[list(r)[0]] #getFirstFile
-        f.save(f"./static/img/products/{name.replace(' ','').lower()}.png")
+        f.save(f"./static/img/products/{name['name'].replace(' ','').lower()}.png")
 
 def get_json(tJson):
      return float(tJson.json()["data"]["buy"])
@@ -375,7 +375,7 @@ def faq():
         return redirect("/login")
     
 
-@app.route("/logout")
+@app.route("/logout",methods=["GET","POST","DELETE","PUT"])
 def logout():
     if(token_decode()[0]):
         pop_session([])
@@ -398,8 +398,7 @@ def admin():
 
             if request.method == "PUT":
                 r = request.form
-
-                file_checker(request.files, r['name'])
+                file_checker(request.files, r)
 
                 setMsg = ""
                 for l in r:
@@ -417,7 +416,7 @@ def admin():
             elif request.method == "POST":
                 r = request.form
 
-                file_checker(request.files, r['name'])
+                file_checker(request.files, r)
 
                 
                 keys = ""

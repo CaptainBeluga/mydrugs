@@ -1,14 +1,9 @@
-function f(){
-    let i = document.getElementsByClassName("accordion-button");
-    //accordion-button collapsed => open accordion
+function init_data(){
+    formData = new FormData();
+    formData.set("csrf_token",document.getElementById("csrf_token").value)
 
-    //accordion-button => all accordion
-
-    for(let j=0; j<i.length; j++){
-        console.log(i[j].id)
-    }
+    return formData
 }
-
 
 
 function get_section(element){
@@ -41,10 +36,6 @@ function input_system(el){
 
 let isEdit = false;
 let isAdd = false;
-
-const formData = new FormData()
-formData.set("csrf_token", document.getElementById("csrf_token").value)
-
 
 function disable_buttons(id){
     let buttons = new Array(document.getElementsByClassName("btn btn-warning"), document.getElementsByClassName("btn btn-danger"))
@@ -105,8 +96,7 @@ function edit(id){
 
 
 function save(id){
-
-    formData.set("csrf_token", document.getElementById("csrf_token").value)
+    const formData = init_data()
     
     let uname = id.split("-")[0];
 
@@ -144,6 +134,8 @@ function save(id){
 
 
 function add(id){
+    const formData = init_data()
+
     isAdd = !isAdd
 
     if(isAdd){
@@ -189,6 +181,8 @@ function add(id){
 
 
 function del(id){
+    const formData = init_data()
+
     del_button = document.getElementById("confirm_delete")
     new bootstrap.Modal("#delModal").show();
 
@@ -208,6 +202,8 @@ function del(id){
                 let accordion = document.getElementById(formData.get("path"))
                 accordion.children[0].children[0].className = "accordion-button"
                 accordion.children[1].className = "accordion-collapse collapse show"
+
+                document.getElementsByClassName("modal-open")[0].style=""
             }
         };
         xhr.send(formData);
