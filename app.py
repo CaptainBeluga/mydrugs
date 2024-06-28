@@ -8,12 +8,10 @@ import requests
 import sqlite3
 import secrets
 import bleach
-from dotenv import dotenv_values
-
-ENV = dotenv_values(".env")
+import os
 
 app = Flask(__name__)
-app.secret_key = ENV["SECRET_KEY"]
+app.secret_key = os.getenv("SECRET_KEY")
 csrf = CSRFProtect(app)
 
 toExcept = ["jwt","csrf_token"]
@@ -61,7 +59,7 @@ def token_gen(userid,username,isAdmin):
     "isAdmin" : isAdmin,
     "exp" : datetime.utcnow() + timedelta(seconds=3600) #3600
     },
-    ENV["JWT_KEY"],algorithm='HS256')
+    os.getenv("JWT_KEY"),algorithm='HS256')
 
     return token
 
@@ -83,7 +81,7 @@ def pop_session(toExcept):
 def token_decode():
     if(session.get("jwt")):   
         try:
-            data = jwt.decode(session.get("jwt"),ENV["JWT_KEY"] ,algorithms=['HS256',])
+            data = jwt.decode(session.get("jwt"),os.getenv("JWT_KEY") ,algorithms=['HS256',])
             return [True,data]
         
         #jwt.exceptions.DecodeError

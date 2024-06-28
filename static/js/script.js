@@ -29,13 +29,14 @@ function shop_to_cart(id){
     const formData = new FormData();
     formData.set("csrf_token", document.getElementById("csrf_token").value);
     formData.set("id", id)
-    
+
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/shop', true);
 
     xhr.onload = function () {
         if (xhr.status === 200) {
             document.body.innerHTML = xhr.responseText;
+            new bootstrap.Modal(document.getElementById('addCartModal')).show()
         }
     };
     xhr.send(formData);
@@ -43,18 +44,18 @@ function shop_to_cart(id){
 
 function basic(arr,endpoint){
     const formData = new FormData();
-    
+
     for(let i=0;i<arr.length;i++){
         formData.set(arr[i], document.getElementById(arr[i]).value)
     }
-    
+
     const xhr = new XMLHttpRequest();
     xhr.open('POST', `/${endpoint}`, true);
 
     xhr.onload = function () {
         if (xhr.status != 200) {
             document.body.innerHTML = xhr.responseText;
-                
+
             for(let i=0;i<arr.length;i++){
                 if(arr[i] != "csrf_token"){
                 document.getElementById(arr[i]).value = data[arr[i]];

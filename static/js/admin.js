@@ -17,8 +17,8 @@ function get_section(element){
 
 function input_system(el){
     if(el.type == "checkbox"){
-       return [el.id,el.checked ? "1" : "0"] 
-    } 
+       return [el.id,el.checked ? "1" : "0"]
+    }
 
     else if(el.type == "file"){
         if(el.files.length == 1){
@@ -29,7 +29,7 @@ function input_system(el){
     }
     else{
         return [el.id,el.value]
-    }  
+    }
 }
 
 
@@ -58,7 +58,7 @@ function disable_buttons(id){
         saveButton.removeAttribute("disabled")
     }
     else{
-        saveButton.setAttribute("disabled","")    
+        saveButton.setAttribute("disabled","")
     }
 
     let editButton = document.getElementById(id)
@@ -76,7 +76,7 @@ function edit(id){
         [+] DATABASE ELEMENT EDIT (uname-h)
     */
     let uname = id.split("-")[0];
-    
+
     //same length
     let toHide = document.getElementsByName(`${uname}-h`)
     let toShow = document.getElementsByName(uname)
@@ -97,7 +97,7 @@ function edit(id){
 
 function save(id){
     const formData = init_data()
-    
+
     let uname = id.split("-")[0];
 
     let values = document.getElementsByName(uname)
@@ -107,7 +107,7 @@ function save(id){
 
     for(let i=0; i<values.length; i++){
         let el = values[i].children[0]
-        
+
         let resp = input_system(el)
 
         if(resp != null){
@@ -121,7 +121,7 @@ function save(id){
     xhr.onload = function () {
         if (xhr.status === 200) {
             document.body.innerHTML = xhr.responseText;
-      
+
             let accordion = document.getElementById(formData.get("path"))
             accordion.children[0].children[0].className = "accordion-button"
             accordion.children[1].className = "accordion-collapse collapse show"
@@ -140,7 +140,7 @@ function add(id){
 
     if(isAdd){
         document.getElementById(id).innerText = "ADD RECORD"
-        
+
         document.getElementById(id.replace("add","cancelAdd")).style = ""
         document.getElementById(id.replace("add","addFields")).style = ""
     }
@@ -168,7 +168,7 @@ function add(id){
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     document.body.innerHTML = xhr.responseText;
-            
+
                     let accordion = document.getElementById(formData.get("path"))
                     accordion.children[0].children[0].className = "accordion-button"
                     accordion.children[1].className = "accordion-collapse collapse show"
@@ -188,7 +188,7 @@ function del(id){
 
 
     del_button.addEventListener("click", function(){
-        
+
         formData.set("path",get_section(id))
         formData.set("id",id.split("-")[1])
 
@@ -198,7 +198,7 @@ function del(id){
         xhr.onload = function () {
             if (xhr.status === 200) {
                 document.body.innerHTML = xhr.responseText;
-        
+
                 let accordion = document.getElementById(formData.get("path"))
                 accordion.children[0].children[0].className = "accordion-button"
                 accordion.children[1].className = "accordion-collapse collapse show"
