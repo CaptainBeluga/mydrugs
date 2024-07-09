@@ -123,10 +123,10 @@ def rnd(number):
 
 # @app.errorhandler(404)
 # def notFound(e):
-#     return redirect("/")
+#     return "404"
 # @app.errorhandler(400)
 # def bad(e):
-#     return redirect(request.path)
+#     return "400"
 
 @app.route("/")
 def index():
@@ -307,7 +307,6 @@ def register():
         if request.method == "POST":
             form_values = ["username","email","password","confirm_password","age","gender"]
             form = request.form
-
 
             if(check_form(form,form_values)):
                 if(check_reg(form["username"],6,12)):

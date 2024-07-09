@@ -53,16 +53,15 @@ function basic(arr,endpoint){
     xhr.open('POST', `/${endpoint}`, true);
 
     xhr.onload = function () {
-        if (xhr.status != 200) {
+        if (xhr.responseText != "200") {
             document.body.innerHTML = xhr.responseText;
 
             for(let i=0;i<arr.length;i++){
                 if(arr[i] != "csrf_token"){
-                document.getElementById(arr[i]).value = data[arr[i]];
+                document.getElementById(arr[i]).value = formData.get(arr[i]);
                 }
             }
         }
-
         else{
             window.location = "/"
         }
